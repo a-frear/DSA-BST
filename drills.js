@@ -78,8 +78,8 @@ const isBST = (tree) => {
 
   console.log(isBST(testTree))
 
-// 7. Find the third largest
-//  if there is a right
+// 7. Find the third largest node
+//   if there is a right
 //   you have to go to the right 
 //   and go as far as you can to get to the highest
 //   then you reverse 
