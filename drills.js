@@ -22,6 +22,9 @@ function main() {
     testTree.insert(2)
     testTree.insert(6)
     testTree.insert(10)
+    testTree.insert(11)
+    testTree.insert(100)
+    testTree.insert(200)
     return testTree
 }
 
@@ -48,7 +51,7 @@ const findHeight = (tree) => {
     }
   };
 
-  console.log(findHeight(testTree))
+  console.log('Height: ' + findHeight(testTree))
 
 
 //6. Is it a BST?
@@ -76,20 +79,100 @@ const isBST = (tree) => {
     return true;
   };
 
-  console.log(isBST(testTree))
+  console.log('Is BST? ' + isBST(testTree))
 
-// 7. Find the third largest node
-//   if there is a right
-//   you have to go to the right 
-//   and go as far as you can to get to the highest
-//   then you reverse 
+//7. Find third largest
 
-//if there is no right
-// is there a left?
-//if there is a left, 
-// can I use height for this?
-
-const findThirdLargest = (tree) => {
+const findThirdLargest = (t) => {
+  if (t == null) {
+    return 
+  }
+  const current = t.key
+  //initialize current as root
+  if (current.right == null && current.left != null) {
+    return findThirdLargest(current.left)
+  }
+    // we are looking for the parent of the largest element
+    // that also has a left child
+    // so this is the node we want
+    if (current.right != null &&  
+      current.right.left !== null &&  
+      current.right.right == null &&
+      current.right.left.left == null &&
+      current.right.left.right == null
+      ) {  
+        return current;  
+      }
+      // recurse on the right child until we match
+    // one of the above cases
+    return findThirdLargest(current.right);  
 }
 
+console.log('Find Third Largest: ' + findThirdLargest(testTree))
 
+// 8. Balanced BST
+//A binary search tree is balanced if and only if the depth 
+//of the two subtrees of every node never differ by more than 1.
+const isBalanced = (tree) => {
+  if (!tree) {
+    return false;
+  }
+  if (!tree.right && !tree.left) {
+    return true;
+  }
+  if (Math.abs(findHeight(tree.right) - findHeight(tree.left)) > 1) {
+    return false;
+  }
+  return true;
+};
+
+console.log('Tree is Balanced? ' + isBalanced(testTree));
+
+/*
+7. 
+You are given two arrays which represent two sequences of keys 
+that are used to create two binary search trees. Write a program 
+that will tell whether the two BSTs will be identical or not 
+without actually constructing the tree. You may use another data structure 
+such as an array or a linked list but don't construct the BST. 
+What is the time complexity of your algorithm? 
+E.g., 3, 5, 4, 6, 1, 0, 2 and 3, 1, 5, 2, 4, 6, 0 are two sequences of arrays 
+but will create the exact same BSTs and your program should return true.
+*/
+
+const sameBST = (array1, array2) => {
+  if (array1.length !== array2.length) {
+    //if they aren't the same length, they will not be the same BST
+    return false;
+  }
+  if (array1[0] !== array2[0]) {
+    //if they don't have the same first index, they will be different BSTs
+    return false;
+  }
+  //base case
+  if (array1.length === 0) {
+    return true;
+  }
+  //filter left side of array1
+  let leftArray1 = array1.filter((i) => i < array1[0]);
+  //filter right side of array1
+  let rightArray1 = array1.filter((i) => i > array1[0]);
+  //filter left side of array2
+  let leftArray2 = array2.filter((i) => i < array2[0]);
+  //filter right side of array2
+  let rightArray2 = array2.filter((i) => i > array2[0]);
+  return !sameBST(leftArray1, leftArray2)
+    ? false
+    : sameBST(rightArray1, rightArray2)
+    ? true
+    : false;
+};
+
+const arr1 = [3, 5, 4, 6, 1, 0, 2];
+const arr2 = [3, 1, 5, 2, 4, 6, 0];
+const arr3 = [3, 1, 4, 6, 0, 2, 5];
+const arr4 = [3, 8];
+
+console.log('Same BST? ' + sameBST(arr1, arr2));
+console.log('Same BST? ' + sameBST(arr2, arr3));
+console.log('Same BST? ' + sameBST(arr2, arr4));
