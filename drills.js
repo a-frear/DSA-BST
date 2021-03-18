@@ -41,13 +41,16 @@ const findHeight = (tree) => {
       let leftDepth = findHeight(tree.left);
       let rightDepth = findHeight(tree.right);
   
-      //return the greater value (depth) + 1 for the root node
-      if (leftDepth > rightDepth) {
-        return leftDepth + 1;
-      } else {
-        // if right is greater or they are the same, return the right
-        return rightDepth + 1;
-      }
+      // //return the greater value (depth) + 1 for the root node
+      // if (leftDepth > rightDepth) {
+      //   return leftDepth + 1;
+      // } else {
+      //   // if right is greater or they are the same, return the right
+      //   return rightDepth + 1;
+      // }
+      return leftDepth > rightDepth
+        ? leftDepth + 1
+        : rightDepth + 1
     }
   };
 
@@ -83,30 +86,34 @@ const isBST = (tree) => {
 
 //7. Find third largest
 
-const findThirdLargest = (t) => {
-  if (t == null) {
-    return 
+const findThirdLargest = (BST) => {
+  if (tree === null) return 0;
+  // create an array to hold values
+  let results = [];
+  // traverse function
+  results.push(BST.key)
+  const _traverse = (tree) => {
+    // base case to stop recursion when  undefined
+    if (tree.left) {
+      results.push(tree.left.key);
+      _traverse(tree.left);
+    }
+    // push the value to the results array
+    if (tree.right) {
+      results.push(tree.right.key);
+      _traverse(tree.right);
+    }
+  };
+
+  _traverse(BST);
+  console.log(results)
+  if (results.length < 3) {
+    return "The tree has less than 3 nodes";
+  } else {
+    console.log(results.sort((a, b) => b - a))
+    return results.sort((a, b) => b - a)[2];
   }
-  const current = t.key
-  //initialize current as root
-  if (current.right == null && current.left != null) {
-    return findThirdLargest(current.left)
-  }
-    // we are looking for the parent of the largest element
-    // that also has a left child
-    // so this is the node we want
-    if (current.right != null &&  
-      current.right.left !== null &&  
-      current.right.right == null &&
-      current.right.left.left == null &&
-      current.right.left.right == null
-      ) {  
-        return current;  
-      }
-      // recurse on the right child until we match
-    // one of the above cases
-    return findThirdLargest(current.right);  
-}
+};
 
 console.log('Find Third Largest: ' + findThirdLargest(testTree))
 
@@ -161,11 +168,12 @@ const sameBST = (array1, array2) => {
   let leftArray2 = array2.filter((i) => i < array2[0]);
   //filter right side of array2
   let rightArray2 = array2.filter((i) => i > array2[0]);
-  return !sameBST(leftArray1, leftArray2)
-    ? false
-    : sameBST(rightArray1, rightArray2)
-    ? true
-    : false;
+  // return !sameBST(leftArray1, leftArray2)
+  //   ? false
+  //   : sameBST(rightArray1, rightArray2)
+  //   ? true
+  //   : false;
+  return !sameBST(leftArray1, leftArray2) || !sameBST(rightArray1, rightArray2)
 };
 
 const arr1 = [3, 5, 4, 6, 1, 0, 2];
